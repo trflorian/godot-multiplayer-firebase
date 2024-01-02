@@ -3,6 +3,10 @@ extends Node
 const EVENT_TYPE_PREFIX = "event: "
 const EVENT_DATA_PREFIX = "data: "
 
+class EventData:
+	var type: String
+	var data: Dictionary
+
 func _ready() -> void:
 	_start_listening()
 
@@ -17,34 +21,6 @@ func _start_listening() -> void:
 		var events = _parse_response_event_data(response)
 		for event in events:
 			print(event)
-	
-#func _ready() -> void:
-	#start_player_stream(func(x): print(x))
-	#pass
-	#
-#func start_player_stream(player_callback: Callable) -> void:
-	#var tcp = await _setup_tcp_stream()
-	#var stream = await _setup_tls_stream(tcp)
-	#
-	## send request for server-sent event stream and wait for first message
-	#_start_sse_stream(stream)
-	#var initial_response = await _read_stream_response(stream)
-	#print("Initial response: \n %s \n" % initial_response)
-	#
-	#var initial_data = _parse_initial_response(initial_response)
-	#if !initial_data.is_empty():
-		#player_callback.call(initial_data)
-	#print("Initial data: " + initial_data)
-	#
-	#print("=====================")
-	#
-	#while true:
-		#var response = await _read_stream_response(stream)
-		#var players = _parse_server_event(response)
-		#player_callback.call(players)
-	#
-	#stream.disconnect_from_stream()
-	#tcp.disconnect_from_host()
 
 func _setup_tcp_stream() -> StreamPeerTCP:
 	var tcp = StreamPeerTCP.new()
@@ -99,28 +75,13 @@ func _read_stream_response(stream: StreamPeer) -> String:
 		
 	return stream.get_string(available_bytes)
 
-#func _parse_server_event(event_string: String) -> String: #Array[Dictionary]:
-	#return event_string
-#
-#func _parse_initial_response(response: String) -> String:
-	#var lines = response.split("\n")
-	#var data_lines = ""
-	#for l in lines:
-		#if l.begins_with("event:") or l.begins_with("data:"):
-			#data_lines += l + "\n"
-	#return data_lines
-
-class EventData:
-	var type: String
-	var data: Dictionary
-
 func _parse_event_data(event_str: String) -> EventData:
+	# event: event name
+	# data: JSON encoded data payload
+	
 	var event_lines = event_str.split("\n")
 	if event_lines.size() != 2:
 		return null
-	
-	# event: put
-	# data: {...}
 	
 	var event_type_line = event_lines[0]
 	if !event_type_line.begins_with(EVENT_TYPE_PREFIX):
@@ -128,7 +89,6 @@ func _parse_event_data(event_str: String) -> EventData:
 	var event_data_line = event_lines[1]
 	if !event_data_line.begins_with(EVENT_DATA_PREFIX):
 		return null
-	
 	
 	var event_type_str = event_type_line.substr(EVENT_TYPE_PREFIX.length())
 	var event_data_str = event_data_line.substr(EVENT_DATA_PREFIX.length())
@@ -154,5 +114,3 @@ func _parse_response_event_data(response: String) -> Array[Dictionary]:
 		event_data.append(event.data)
 		
 	return event_data
-	
-	
