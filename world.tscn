@@ -21,11 +21,11 @@ texture = ExtResource("1_mvbqk")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("RectangleShape2D_0u7bi")
 
-[node name="PlayerRemote" parent="." instance=ExtResource("3_72bxh")]
-
 [node name="PlayerLocalSync" type="HTTPRequest" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("3_y764b")
 player = NodePath("../Player")
 
-[node name="PlayerRemoteSync" type="Node" parent="."]
+[node name="PlayerRemoteSync" type="Node" parent="." node_paths=PackedStringArray("player_local")]
 script = ExtResource("4_321a6")
+player_remote_scene = ExtResource("3_72bxh")
+player_local = NodePath("../Player")
