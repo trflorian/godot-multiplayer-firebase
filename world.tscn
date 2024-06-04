@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://dvevpdhamme43"]
 
 [ext_resource type="Script" path="res://player_local.gd" id="1_lrlno"]
-[ext_resource type="PackedScene" path="res://player_remote.tscn" id="3_72bxh"]
+[ext_resource type="PackedScene" uid="uid://beh6lvsnaewv5" path="res://player_remote.tscn" id="3_72bxh"]
 [ext_resource type="Script" path="res://player_local_sync.gd" id="3_y764b"]
 [ext_resource type="Script" path="res://player_remote_sync.gd" id="4_321a6"]
 [ext_resource type="Texture2D" uid="uid://rhxoj3ph83bb" path="res://assets/Basic Charakter Spritesheet.png" id="4_jkkqs"]
@@ -344,10 +344,10 @@ script = ExtResource("1_lrlno")
 texture = ExtResource("4_jkkqs")
 hframes = 4
 vframes = 4
+script = ExtResource("5_v32yq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("RectangleShape2D_0u7bi")
-script = ExtResource("5_v32yq")
 
 [node name="PlayerLocalSync" type="HTTPRequest" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("3_y764b")
