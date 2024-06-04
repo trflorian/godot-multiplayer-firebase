@@ -15,14 +15,16 @@ func _process(delta: float) -> void:
 	var is_walking = character.velocity.length() > 0
 	
 	if is_walking:
-		if character.velocity.x < 0:
-			curr_look_dir = LookDir.LEFT
-		if character.velocity.x > 0:
-			curr_look_dir = LookDir.RIGHT
-		if character.velocity.y < 0:
-			curr_look_dir = LookDir.UP
-		if character.velocity.y > 0:
-			curr_look_dir = LookDir.DOWN
+		if abs(character.velocity.x) > abs(character.velocity.y):
+			if character.velocity.x < 0:
+				curr_look_dir = LookDir.LEFT
+			if character.velocity.x > 0:
+				curr_look_dir = LookDir.RIGHT
+		else:
+			if character.velocity.y < 0:
+				curr_look_dir = LookDir.UP
+			if character.velocity.y > 0:
+				curr_look_dir = LookDir.DOWN
 	
 	frame = _get_sprite_frame(curr_look_dir, is_walking, int(animation_time * animation_speed) % 2)
 
