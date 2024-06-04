@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://b28nk3m5pxtii"]
+[gd_scene load_steps=13 format=3 uid="uid://dvevpdhamme43"]
 
 [ext_resource type="Script" path="res://player_local.gd" id="1_lrlno"]
-[ext_resource type="Texture2D" uid="uid://bc2j5ml8vi6j7" path="res://icon.svg" id="1_mvbqk"]
-[ext_resource type="PackedScene" uid="uid://cubf65uiwd6hg" path="res://player_remote.tscn" id="3_72bxh"]
+[ext_resource type="PackedScene" path="res://player_remote.tscn" id="3_72bxh"]
 [ext_resource type="Script" path="res://player_local_sync.gd" id="3_y764b"]
 [ext_resource type="Script" path="res://player_remote_sync.gd" id="4_321a6"]
+[ext_resource type="Texture2D" uid="uid://rhxoj3ph83bb" path="res://assets/Basic Charakter Spritesheet.png" id="4_jkkqs"]
+[ext_resource type="Script" path="res://player_animation.gd" id="5_v32yq"]
 [ext_resource type="Texture2D" uid="uid://c14ykrx7qa2mn" path="res://assets/Grass.png" id="6_1m4cx"]
 [ext_resource type="Texture2D" uid="uid://cj7hywfud20rb" path="res://assets/Water.png" id="7_1p2j6"]
 
@@ -323,7 +324,7 @@ sources/1 = SubResource("TileSetAtlasSource_uo8ei")
 sources/2 = SubResource("TileSetAtlasSource_pir4i")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0u7bi"]
-size = Vector2(128, 128)
+size = Vector2(14, 16)
 
 [node name="World" type="Node2D"]
 
@@ -340,10 +341,13 @@ position = Vector2(1085, 584)
 script = ExtResource("1_lrlno")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
-texture = ExtResource("1_mvbqk")
+texture = ExtResource("4_jkkqs")
+hframes = 4
+vframes = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("RectangleShape2D_0u7bi")
+script = ExtResource("5_v32yq")
 
 [node name="PlayerLocalSync" type="HTTPRequest" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("3_y764b")
