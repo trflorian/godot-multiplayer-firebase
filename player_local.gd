@@ -11,11 +11,10 @@ func _ready() -> void:
 	_set_random_spawn()
 
 func _set_random_spawn() -> void:
-	var screen_size = get_viewport().size
-	var spawn_border = 64
-	var rand_x = randf_range(spawn_border, screen_size.x - spawn_border)
-	var rand_y = randf_range(spawn_border, screen_size.y - spawn_border)
-	global_position = Vector2(rand_x, rand_y)
+	var spawn_radius = 50
+	var rand_x = randf_range(-spawn_radius, spawn_radius)
+	var rand_y = randf_range(-spawn_radius, spawn_radius)
+	global_position = global_position + Vector2(rand_x, rand_y)
 
 func _physics_process(_delta: float) -> void:
 	var dx = Input.get_axis("move_left", "move_right")

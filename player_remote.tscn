@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://rhxoj3ph83bb" path="res://assets/Basic Charakter Spritesheet.png" id="2_pxawo"]
 [ext_resource type="Script" path="res://player_animation.gd" id="3_hr7c1"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0u7bi"]
-size = Vector2(14, 16)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8sn7w"]
+size = Vector2(14, 10)
 
 [node name="PlayerRemote" type="CharacterBody2D"]
 collision_layer = 0
@@ -18,4 +18,5 @@ vframes = 4
 script = ExtResource("3_hr7c1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_0u7bi")
+position = Vector2(0, 7)
+shape = SubResource("RectangleShape2D_8sn7w")
