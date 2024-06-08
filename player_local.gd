@@ -2,13 +2,17 @@ extends CharacterBody2D
 
 class_name PlayerLocal
 
-const MOVE_SPEED: float = 200
+const MOVE_SPEED: float = 100
+
+@export var sprite: Sprite2D
 
 var player_id: int = randi_range(100000, 999999)
-var player_color: Color = Color.from_hsv(randf(), 1.0, 1.0)
+var player_color: Color = Color.from_hsv(randf(), 0.5, 1.0)
 
 func _ready() -> void:
 	_set_random_spawn()
+	
+	sprite.modulate = player_color
 
 func _set_random_spawn() -> void:
 	var spawn_radius = 50

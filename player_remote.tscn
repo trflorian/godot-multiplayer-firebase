@@ -7,9 +7,10 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8sn7w"]
 size = Vector2(14, 10)
 
-[node name="PlayerRemote" type="CharacterBody2D"]
+[node name="PlayerRemote" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
 collision_layer = 0
 script = ExtResource("1_8g1hr")
+sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_pxawo")

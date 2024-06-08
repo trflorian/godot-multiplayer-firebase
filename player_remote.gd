@@ -5,7 +5,8 @@ class_name PlayerRemote
 var player_id: String
 var color: Color
 
-@export var speed: float = 200
+@export var speed: float = 100
+@export var sprite: Sprite2D
 
 var target_pos: Vector2
 
@@ -24,6 +25,7 @@ func _process(delta: float) -> void:
 func update_from_event(player_data: Dictionary) -> void:
 	player_id = str(player_data["player_id"])
 	color = Color.html(player_data["color"])
+	sprite.modulate = color
 	_move_to_target(player_data["position_x"], player_data["position_y"])
 
 func _move_to_target(target_pos_x, target_pos_y) -> void:
