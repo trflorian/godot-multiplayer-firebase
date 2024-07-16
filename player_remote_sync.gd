@@ -12,20 +12,33 @@ class EventData:
 @export var player_local: PlayerLocal
 var players_remote: Dictionary = {}
 
-func _ready() -> void:
-	_start_listening()
+var httpclient = HTTPClient.new()
 
-func _start_listening() -> void:
-	var tcp = await _setup_tcp_stream()
-	var stream = await _setup_tls_stream(tcp)
+func _ready() -> void:
+	_setup_connection()
+
+func _setup_connection() -> void:
+	httpclient.connect_to_host(FirebaseUrls.HOST_URL)
 	
-	_start_sse_stream(stream)
+	# Wait for the connection
+	while httpclient.get_status() != HTTPClient.STATUS_CONNECTED:
+		httpclient.poll()
 	
-	while true:
-		var response = await _read_stream_response(stream)
-		var events = _parse_response_event_data(response) as Array[Dictionary]
-		for event in events:
-			_handle_player_event(event)
+	httpclient.request(
+		HTTPClient.METHOD_POST, 
+		FirebaseUrls.get_players_url(),
+		["Accept: text/event-stream"],
+	)
+
+func _process(_delta: float) -> void:
+	httpclient.poll()
+	if httpclient.has_response():
+		var body = httpclient.read_response_body_chunk()
+		if body:
+			var response = body.get_string_from_utf8()
+			var events = _parse_response_event_data(response) as Array[Dictionary]
+			for event in events:
+				_handle_player_event(event)
 
 func _create_or_update_player(player_id: String, player_data: Dictionary):
 	if player_id == str(player_local.player_id):
@@ -69,59 +82,6 @@ func _handle_player_event(event: Dictionary):
 			_create_or_update_player(player_id, data)
 		else:
 			_delete_player(player_id)
-
-func _setup_tcp_stream() -> StreamPeerTCP:
-	var tcp = StreamPeerTCP.new()
-	
-	var err_conn_tcp = tcp.connect_to_host(FirebaseUrls.HOST, 443)
-	assert(err_conn_tcp == OK)
-	
-	tcp.poll()
-	var tcp_status = tcp.get_status()
-	while tcp_status != StreamPeerTCP.STATUS_CONNECTED:
-		await get_tree().process_frame
-		tcp.poll()
-		tcp_status = tcp.get_status()
-	
-	return tcp
-
-func _setup_tls_stream(tcp: StreamPeerTCP) -> StreamPeerTLS:
-	var stream = StreamPeerTLS.new()
-	
-	var err_conn_stream = stream.connect_to_stream(tcp, FirebaseUrls.HOST)
-	assert(err_conn_stream == OK)
-	
-	stream.poll()
-	var stream_status = stream.get_status()
-	while stream_status != StreamPeerTLS.STATUS_CONNECTED:
-		await get_tree().process_frame
-		stream.poll()
-		stream_status = stream.get_status()
-	
-	return stream
-
-func _start_sse_stream(stream: StreamPeer) -> void:
-	var url = FirebaseUrls.get_players_url()
-	var request_line = "GET %s HTTP/1.1" % url
-	var headers = [
-		"Host: %s" % FirebaseUrls.HOST,
-		"Accept: text/event-stream",
-	]
-	var request = ""
-	request += request_line + "\n" # request line
-	request += "\n".join(headers) + "\n" # headers
-	request += "\n" # empty line 
-	stream.put_data(request.to_ascii_buffer())
-
-func _read_stream_response(stream: StreamPeer) -> String:
-	stream.poll()
-	var available_bytes = stream.get_available_bytes()
-	while available_bytes == 0:
-		await get_tree().process_frame
-		stream.poll()
-		available_bytes = stream.get_available_bytes()
-		
-	return stream.get_string(available_bytes)
 
 func _parse_event_data(event_str: String) -> EventData:
 	# event: event name
